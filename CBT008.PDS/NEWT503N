@@ -1,0 +1,45 @@
+//SBGOLOB1  JOB (ACCT#),S-GOLOB,                                        00010000
+// NOTIFY=&SYSUID,                                                      00020000
+// CLASS=B,MSGCLASS=X                                                   00030000
+//******************************************************************//  00100000
+//*  JOB TO CREATE NEW CBT TAPE VERSION 503 FROM THE V503 MASTER   *//  00030000
+//*    CREATED FROM EDITED FILES ON THIS PDS.                      *//  00030000
+//******************************************************************//  00100000
+//*    OLD MASTER TAPE VOLUME :    V503MT                               00100000
+//*    NEW MASTER TAPE VOLUME :    C503MU                               00100000
+//******************************************************************//  00100000
+//NEWJCL  PROC
+//COPY1   EXEC PGM=CKIEBGEN
+//STEPLIB  DD  DISP=SHR,DSN=SBGOLOB.CBTCREAT.LOAD
+//SYSPRINT DD  SYSOUT=*
+//SYSUT1 DD DISP=SHR,DSN=SBGOLOB.CBT.EDIT(FILE001)
+//SYSUT2 DD DSN=FILE0001,
+//         DISP=(NEW,KEEP),
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=32720,TRTCH=NOCOMP),
+//         UNIT=(564),
+//         LABEL=(1,SL,EXPDT=98000),
+//         VOL=(,RETAIN,SER=C503MU)
+//SYSIN  DD DUMMY
+//         PEND
+//******************************************************************//  00100000
+//COPYFILE PROC FROM=,TO=,DSP=KEEP,UN1=568,UN2=564
+//COPYSTEP EXEC PGM=COPYFILE,REGION=7000K PARM='TAPEL'
+//STEPLIB  DD DISP=SHR,DSN=SYS1.CBT.LINKLIB
+//MSG      DD SYSOUT=*
+//*APELOUT DD SYSOUT=*
+//SELREPT  DD SYSOUT=*
+//SYSABEND DD SYSOUT=*
+//IN       DD DSN=INPUT.FILE,UNIT=&UN1,DISP=SHR,LABEL=EXPDT=98000,
+//            VOL=SER=&FROM
+//TAPELIN  DD DSN=OUTPUT.FILE,
+//            UNIT=(&UN2,,DEFER),VOL=(,RETAIN,SER=&TO),
+//            DISP=(NEW,&DSP),LABEL=EXPDT=98000,DCB=TRTCH=NOCOMP
+//         PEND
+//******************************************************************//  00100000
+//*
+//FILE1    EXEC NEWJCL
+//*
+//COPYF01  EXEC COPYFILE,FROM=V503MT,TO=C503MU
+//SYSIN    DD *
+   2/2  ALL
+/*

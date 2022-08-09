@@ -1,0 +1,29 @@
+//SBGOLOB1  JOB (ACCT#),S-GOLOB,                                        00010000
+// NOTIFY=&SYSUID,                                                      00020000
+// CLASS=B,MSGCLASS=X                                                   00030000
+//******************************************************************//  00100000
+//*  JOB TO CREATE NEW CBT TAPE VERSION 503 FROM THE V503 MASTER   *//  00030000
+//*    CREATED FROM EDITED FILES ON THIS PDS.                      *//  00030000
+//******************************************************************//  00100000
+//*    OLD MASTER TAPE VOLUME :    V503MT                               00100000
+//*    NEW MASTER TAPE VOLUME :    CBT503                               00100000
+//******************************************************************//  00100000
+//COPYSLNL PROC FROM=,TO=,DSP=KEEP,UN1=568,UN2=563
+//COPYSTEP EXEC PGM=COPYSLNL,REGION=4000K,PARM='TAPEL'
+//STEPLIB  DD DISP=SHR,DSN=SYS1.CBT.LINKLIB
+//MSG      DD SYSOUT=*
+//TAPELOUT DD SYSOUT=*
+//SELREPT  DD SYSOUT=*
+//SYSABEND DD SYSOUT=*
+//IN       DD DSN=INPUT.FILE,UNIT=&UN1,DISP=SHR,LABEL=EXPDT=98000,
+//            VOL=SER=&FROM
+//TAPELIN  DD DSN=OUTPUT.FILE,
+//            UNIT=(&UN2,,DEFER),VOL=(,RETAIN,SER=&TO),
+//            DISP=(NEW,&DSP),LABEL=EXPDT=98000,DCB=TRTCH=NOCOMP
+//         PEND
+//******************************************************************//  00100000
+//*
+//COPYF01  EXEC COPYSLNL,FROM=V503MT,TO=CBT503
+//SYSIN    DD *
+   1/1   ALL
+/*
